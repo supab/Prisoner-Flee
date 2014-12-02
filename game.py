@@ -11,6 +11,7 @@ class MainGame(SimpleGame):
 	def __init__(self):
 		super(MainGame, self).__init__('Prison Flee', MainGame.BLACK)
 		self.bosstime = 0
+		self.score = 0
 		self.player = Player(radius=10, \
 						color=MainGame.WHITE, \
 						pos=(self.window_size[0]/2, \
@@ -143,10 +144,14 @@ class MainGame(SimpleGame):
 		
 	def init(self):
 		super(MainGame, self).init()
+		self.render_score()
 		
 	def render(self,surface):
 		self.player.render(surface)
 		self.bullet.render(surface)
+		self.score = (pygame.time.get_ticks())
+		self.render_score()
+		surface.blit(self.score_image, (10,10))
 		if (pygame.time.get_ticks())/1000 %5==0 and (pygame.time.get_ticks())/1000  > self.bosstime :
 			for i in range(12):
 				starbullet = DirectionalBullet(radius=4, \
@@ -176,6 +181,9 @@ class MainGame(SimpleGame):
 			self.police4lst[i].render(surface)
 		for i in range(10):
 			self.riotlst[i].render(surface)
+			
+	def render_score(self):
+		self.score_image = self.font.render("Score = %d" % self.score,0,MainGame.WHITE)
 	
 	def collisiondetector(self):
 		RADIUS_CHAR = 15
