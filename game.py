@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from gamelib import SimpleGame
-from elements import Bullet, Player, DirectionalBullet , StarBullet, RandomDirectionalBullet,Police1,Police2,Police3,Police4,Riot
+from elements import Bullet, Player, DirectionalBullet , StarBullet, RandomDirectionalBullet,Police1,Police2,Police3,Police4,Riot,Captain
 import random
 
 class MainGame(SimpleGame):
@@ -9,7 +9,8 @@ class MainGame(SimpleGame):
 	BLUE = pygame.Color('blue')
 	WHITE = pygame.Color('white')
 	def __init__(self):
-		super(MainGame, self).__init__('Squash', MainGame.BLACK)
+		super(MainGame, self).__init__('Prison Flee', MainGame.BLACK)
+		self.bosstime = 0
 		self.player = Player(radius=10, \
 						color=MainGame.WHITE, \
 						pos=(self.window_size[0]/2, \
@@ -88,6 +89,21 @@ class MainGame(SimpleGame):
 						color=MainGame.BLUE, \
 						pos=(self.window_size[0]/2, \
 						self.window_size[1]/2), speed = (1,1),dir = 200)
+
+		self.captain = Captain(radius=10, \
+						color=MainGame.BLUE, \
+						pos=(random.randint(0,640), \
+						-30),\
+						speed = (0.2,0.2))
+
+		self.starbulletlst = []
+		if (pygame.time.get_ticks())/1000 %5==0 :
+			for i in range(12):
+				starbullet = DirectionalBullet(radius=4, \
+						color=MainGame.WHITE, \
+						pos=(self.captain.x, \
+						self.captain.y), speed = (2,2),dir =i*30)
+				self.starbulletlst.append(starbullet)
 		
 		
 	def init(self):
@@ -111,6 +127,20 @@ class MainGame(SimpleGame):
 			self.police4lst[i].render(surface)
 		for i in range(2):
 			self.riotlst[i].render(surface)
+		self.captain.render(surface)
+		if (pygame.time.get_ticks())/1000 %5==0 :
+			for i in range(12):
+				starbullet = DirectionalBullet(radius=4, \
+						color=MainGame.WHITE, \
+						pos=(self.captain.x, \
+						self.captain.y), speed = (2,2),dir =i*30)
+				self.starbulletlst.append(starbullet)
+		if (pygame.time.get_ticks())/1000 %5==4 and (pygame.time.get_ticks())/1000  > self.bosstime :
+			self.starbulletlst = []
+		self.captain.render(surface)
+		if 4>(pygame.time.get_ticks())/1000 %5>0 and (pygame.time.get_ticks())/1000  > self.bosstime :
+			for i in range(12):
+				self.starbulletlst[i].render(surface)
 			
 	
 	def collisiondetector(self):
@@ -154,6 +184,12 @@ class MainGame(SimpleGame):
 			self.riotlst[i].move(self.player)
 			
 		self.randomdirectionalbullet.move()
+		if (pygame.time.get_ticks())/1000  > self.bosstime :
+			self.captain.move(self.player)
+
+		if 4>(pygame.time.get_ticks())/1000 %5>0 and (pygame.time.get_ticks())/1000  > self.bosstime :
+			for i in range(12):
+				self.starbulletlst[i].move()
 		
 def main():
 	game = MainGame()
