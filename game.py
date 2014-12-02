@@ -40,55 +40,79 @@ class MainGame(SimpleGame):
 						pos=(self.window_size[0]/2, \
 						self.window_size[1]/2), )
 
+		self.directionalbullettops =[]
+		for i in range(1000):
+			directionalbullettop = DirectionalBullet(radius=4, \
+						color=MainGame.BLUE, \
+						pos=(random.randint(-60,700), \
+						-10), speed = (2,2),dir =random.randint(0,150))
+			self.directionalbullettops.append(directionalbullettop)
+
+		self.directionalbullettops =[]
+		for i in range(1000):
+			directionalbullettop = DirectionalBullet(radius=4, \
+						color=MainGame.BLUE, \
+						pos=(random.randint(-60,700), \
+						-10), speed = (2,2),dir =random.randint(0,150))
+			self.directionalbullettops.append(directionalbullettop)
+
+		self.directionalbulletdowns =[]
+		for i in range(1000):
+			directionalbulletdown = DirectionalBullet(radius=4, \
+						color=MainGame.BLUE, \
+						pos=(random.randint(-60,700), \
+						520), speed = (2,2),dir =random.randint(150,360))
+			self.directionalbulletdowns.append(directionalbulletdown)
+			
+		self.bullets = Bullet(radius=10, \
+						color=MainGame.BLUE, \
+						pos=(self.window_size[0]/2, \
+						self.window_size[1]/2), )
+
 		self.police1lst = []
-		for i in range(12):
+		for i in range(100):
 			police1 = Police1(radius=10, \
 						color=MainGame.BLUE, \
 						pos=(random.randint(-400,1040), \
-						-10),\
-						speed = (1,1))
+						-30),\
+						speed = (0.5,0.5))
 			self.police1lst.append(police1)
 		
 		self.police2lst = []
-		for i in range(9):
+		for i in range(50):
 			police2 = Police2(radius=10, \
 						color=MainGame.BLUE, \
-						pos=(random.randint(0,640), \
-						random.randint(0,480)),\
-						speed = (1.5,1.5))
+						pos=(random.randint(-400,1040), \
+						510),\
+						speed = (1,1))
 			self.police2lst.append(police2)
 			
 		self.police3lst = []
-		for i in range(6):
+		for i in range(20):
 			police3 = Police3(radius=10, \
 						color=MainGame.BLUE, \
 						pos=(random.randint(0,640), \
-						random.randint(0,480)),\
-						speed = (2,2))
+						-30),\
+						speed = (1.5,1.5))
 			self.police3lst.append(police3)
 		
 		self.police4lst = []
-		for i in range(3):
+		for i in range(10):
 			police4 = Police4(radius=10, \
 						color=MainGame.BLUE, \
 						pos=(random.randint(0,640), \
-						random.randint(0,480)),\
-						speed = (2.5,2.5))
+						520),\
+						speed = (2,2))
 			self.police4lst.append(police4)
 			
 		self.riotlst = []
-		for i in range(2):
+		for i in range(10):
 			riot = Riot(radius=10, \
 						color=MainGame.BLUE, \
 						pos=(random.randint(0,640), \
-						random.randint(0,480)),\
-						speed = (2.8,2.8))
+						-30),\
+						speed = (2.2,2.2))
 			self.riotlst.append(riot)
-		
-		self.randomdirectionalbullet = RandomDirectionalBullet(radius=10, \
-						color=MainGame.BLUE, \
-						pos=(self.window_size[0]/2, \
-						self.window_size[1]/2), speed = (1,1),dir = 200)
 
 		self.captain = Captain(radius=10, \
 						color=MainGame.BLUE, \
@@ -104,6 +128,17 @@ class MainGame(SimpleGame):
 						pos=(self.captain.x, \
 						self.captain.y), speed = (2,2),dir =i*30)
 				self.starbulletlst.append(starbullet)
+
+		if (pygame.time.get_ticks())/1000 %5==4 :
+			for i in range(12):
+				self.starbulletlst[i].remove()
+
+
+		if (pygame.time.get_ticks())/1000 %3==0 :
+			self.randomdirectionalbullet = RandomDirectionalBullet(radius=10, \
+						color=MainGame.BLUE, \
+						pos=(self.window_size[0]/2, \
+						self.window_size[1]/2), speed = (1,1),dir = 200)
 		
 		
 	def init(self):
@@ -112,36 +147,35 @@ class MainGame(SimpleGame):
 	def render(self,surface):
 		self.player.render(surface)
 		self.bullet.render(surface)
-		for i in range(1000):
-			self.directionalbullettops[i].render(surface)
-		for i in range(1000):
-			self.directionalbulletdowns[i].render(surface)
-		self.randomdirectionalbullet.render(surface)
-		for i in range(12):
-			self.police1lst[i].render(surface)
-		for i in range(9):
-			self.police2lst[i].render(surface)
-		for i in range(6):
-			self.police3lst[i].render(surface)
-		for i in range(3):
-			self.police4lst[i].render(surface)
-		for i in range(2):
-			self.riotlst[i].render(surface)
-		self.captain.render(surface)
-		if (pygame.time.get_ticks())/1000 %5==0 :
+		if (pygame.time.get_ticks())/1000 %5==0 and (pygame.time.get_ticks())/1000  > self.bosstime :
 			for i in range(12):
 				starbullet = DirectionalBullet(radius=4, \
 						color=MainGame.WHITE, \
 						pos=(self.captain.x, \
 						self.captain.y), speed = (2,2),dir =i*30)
 				self.starbulletlst.append(starbullet)
+
 		if (pygame.time.get_ticks())/1000 %5==4 and (pygame.time.get_ticks())/1000  > self.bosstime :
 			self.starbulletlst = []
 		self.captain.render(surface)
 		if 4>(pygame.time.get_ticks())/1000 %5>0 and (pygame.time.get_ticks())/1000  > self.bosstime :
 			for i in range(12):
 				self.starbulletlst[i].render(surface)
-			
+
+		for i in range(1000):
+			self.directionalbullettops[i].render(surface)
+		for i in range(1000):
+			self.directionalbulletdowns[i].render(surface)
+		for i in range(10):
+			self.police1lst[i].render(surface)
+		for i in range(10):
+			self.police2lst[i].render(surface)
+		for i in range(10):
+			self.police3lst[i].render(surface)
+		for i in range(10):
+			self.police4lst[i].render(surface)
+		for i in range(10):
+			self.riotlst[i].render(surface)
 	
 	def collisiondetector(self):
 		RADIUS_CHAR = 15
@@ -163,27 +197,39 @@ class MainGame(SimpleGame):
 		if self.collisiondetector() == True:
 			self.is_terminated = True
 		
-		print pygame.time.get_ticks()
-		self.bullet.move()
-		for i in range(10):
-			self.directionalbullettops[i].move()
-		for i in range(10):
-			self.directionalbulletdowns[i].move()
-			
-		for i in range(12):
-			self.police1lst[i].move(self.player)
-		if (pygame.time.get_ticks())/1000  >10 :
-			for i in range(9):
+		if ((pygame.time.get_ticks())/1000) < 100:
+			for i in range(pygame.time.get_ticks()/1000):
+				self.directionalbullettops[i].move()
+			for i in range(pygame.time.get_ticks()/1000):
+				self.directionalbulletdowns[i].move()
+		else:
+			for i in range(2*((pygame.time.get_ticks())/1000)):
+				self.directionalbullettops[i].move()
+			for i in range(2*((pygame.time.get_ticks())/1000)):
+				self.directionalbulletdowns[i].move()
+
+		if (pygame.time.get_ticks())/1000 > 20:
+			for i in range(2):
+				self.police1lst[i].move(self.player)
+		if (pygame.time.get_ticks())/1000 > 30:
+			a=2
+			for i in range(2,4):
+				self.police1lst[i].move(self.player)
+
+		if (pygame.time.get_ticks())/1000  > 40 :
+			for i in range(2):
 				self.police2lst[i].move(self.player)
-		if pygame.time.get_ticks()  >5000 :
-			for i in range(6):
+
+		if (pygame.time.get_ticks())/1000  > 50 :
+			for i in range(2):
 				self.police3lst[i].move(self.player)
-		for i in range(3):
-			self.police4lst[i].move(self.player)
-		for i in range(2):
-			self.riotlst[i].move(self.player)
-			
-		self.randomdirectionalbullet.move()
+
+		if (pygame.time.get_ticks())/1000  > 60 :
+			for i in range(2):
+				self.police4lst[i].move(self.player)
+		if (pygame.time.get_ticks())/1000  > 70 :
+			for i in range(1):
+				self.riotlst[i].move(self.player)
 		if (pygame.time.get_ticks())/1000  > self.bosstime :
 			self.captain.move(self.player)
 
