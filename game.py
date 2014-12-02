@@ -185,12 +185,42 @@ class MainGame(SimpleGame):
 	def render_score(self):
 		self.score_image = self.font.render("Score = %d" % self.score,0,MainGame.WHITE)
 	
-	def collisiondetector(self):
-		RADIUS_CHAR = 15
+	def collisiondetector(self,):
+		CHAR_SIZE = 15
+		BULLET_SIZE = 4
+		ENEMY_SIZE = 15
+
+		for i in range(1000):
+			if self.directionalbulletdowns[i].x-BULLET_SIZE < self.player.x+CHAR_SIZE and self.directionalbulletdowns[i].x+BULLET_SIZE > self.player.x-CHAR_SIZE :
+				if self.directionalbulletdowns[i].y+BULLET_SIZE > self.player.y-CHAR_SIZE and self.directionalbulletdowns[i].y-BULLET_SIZE < self.player.y+CHAR_SIZE:
+					return True
+			if self.directionalbullettops[i].x-BULLET_SIZE < self.player.x+CHAR_SIZE and self.directionalbullettops[i].x+BULLET_SIZE > self.player.x-CHAR_SIZE :
+				if self.directionalbullettops[i].y+BULLET_SIZE > self.player.y-CHAR_SIZE and self.directionalbullettops[i].y-BULLET_SIZE < self.player.y+CHAR_SIZE:
+					return True
 		for i in range(10):
-			if self.player.x+RADIUS_CHAR > self.directionalbulletdowns[i].x-4 and  self.player.x-RADIUS_CHAR > self.directionalbulletdowns[i].x+4 and \
-				self.player.y+RADIUS_CHAR > self.directionalbulletdowns[i].y-4  and  self.player.y-RADIUS_CHAR > self.directionalbulletdowns[i].y+4:
-				return False
+			if self.police1lst[i].x-ENEMY_SIZE < self.player.x+CHAR_SIZE and self.police1lst[i].x+ENEMY_SIZE > self.player.x-CHAR_SIZE :
+				if self.police1lst[i].y+ENEMY_SIZE > self.player.y-CHAR_SIZE and self.police1lst[i].y-ENEMY_SIZE < self.player.y+CHAR_SIZE:
+					return True
+		for i in range(10):
+			if self.police2lst[i].x-ENEMY_SIZE < self.player.x+CHAR_SIZE and self.police2lst[i].x+ENEMY_SIZE > self.player.x-CHAR_SIZE :
+				if self.police2lst[i].y+ENEMY_SIZE > self.player.y-CHAR_SIZE and self.police2lst[i].y-ENEMY_SIZE < self.player.y+CHAR_SIZE:
+					return True
+		for i in range(10):
+			if self.police3lst[i].x-ENEMY_SIZE < self.player.x+CHAR_SIZE and self.police3lst[i].x+ENEMY_SIZE > self.player.x-CHAR_SIZE :
+				if self.police3lst[i].y+ENEMY_SIZE > self.player.y-CHAR_SIZE and self.police3lst[i].y-ENEMY_SIZE < self.player.y+CHAR_SIZE:
+					return True
+		for i in range(10):
+			if self.police4lst[i].x-ENEMY_SIZE < self.player.x+CHAR_SIZE and self.police4lst[i].x+ENEMY_SIZE > self.player.x-CHAR_SIZE :
+				if self.police4lst[i].y+ENEMY_SIZE > self.player.y-CHAR_SIZE and self.police4lst[i].y-ENEMY_SIZE < self.player.y+CHAR_SIZE:
+					return True
+		for i in range(10):
+			if self.riotlst[i].x-ENEMY_SIZE < self.player.x+CHAR_SIZE and self.riotlst[i].x+ENEMY_SIZE > self.player.x-CHAR_SIZE :
+				if self.riotlst[i].y+ENEMY_SIZE > self.player.y-CHAR_SIZE and self.riotlst[i].y-ENEMY_SIZE < self.player.y+CHAR_SIZE:
+					return True
+		for i in range(12):
+			if self.starbulletlst[i].x-BULLET_SIZE < self.player.x+CHAR_SIZE and self.starbulletlst[i].x+BULLET_SIZE > self.player.x-CHAR_SIZE :
+				if self.starbulletlst[i].y+BULLET_SIZE > self.player.y-CHAR_SIZE and self.starbulletlst[i].y-BULLET_SIZE < self.player.y+CHAR_SIZE:
+					return True
 		
 	def update(self):
 		if self.is_key_pressed(K_UP):
