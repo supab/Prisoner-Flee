@@ -13,6 +13,7 @@ class Player(object):
 		self.backimg = pygame.image.load("prisoner_back.png")
 		self.leftimg = pygame.image.load("prisoner_left.png")
 		self.rightimg = pygame.image.load("prisoner_right.png")
+		self.bulletproof = pygame.image.load("prisoner_bulletproof.png")
 	def move(self, delta_t, display, player):
 		global score, game_over
 		self.x += self.vx*delta_t
@@ -45,6 +46,10 @@ class Player(object):
 			surface.blit(self.leftimg,(self.x-15,self.y-15))
 		if self.stat == 'right':
 			surface.blit(self.rightimg,(self.x-15,self.y-15))
+	def bulletproofrender(self, surface):
+		pos = (int(self.x),int(self.y))
+		pygame.draw.circle(surface, self.color, pos, self.radius, 0)
+		surface.blit(self.bulletproof,(self.x-15,self.y-15))
 
 #########################################
 

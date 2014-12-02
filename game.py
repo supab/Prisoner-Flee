@@ -12,6 +12,7 @@ class MainGame(SimpleGame):
 		super(MainGame, self).__init__('Prison Flee', MainGame.BLACK)
 		self.bosstime = 0
 		self.score = 0
+		self.stat = 'normal'
 		self.player = Player(radius=10, \
 						color=MainGame.WHITE, \
 						pos=(self.window_size[0]/2, \
@@ -147,8 +148,12 @@ class MainGame(SimpleGame):
 		self.render_score()
 		
 	def render(self,surface):
-		self.player.render(surface)
 		self.bullet.render(surface)
+		if self.stat == 'proof':
+			self.player.bulletproofrender(surface)
+		else :
+			self.player.render(surface)
+
 		self.score = (pygame.time.get_ticks())
 		self.render_score()
 		surface.blit(self.score_image, (10,10))
@@ -181,7 +186,7 @@ class MainGame(SimpleGame):
 			self.police4lst[i].render(surface)
 		for i in range(10):
 			self.riotlst[i].render(surface)
-			
+
 	def render_score(self):
 		self.score_image = self.font.render("Score = %d" % self.score,0,MainGame.WHITE)
 	
@@ -231,9 +236,17 @@ class MainGame(SimpleGame):
 			self.player.move_left()
 		if self.is_key_pressed(K_RIGHT):
 			self.player.move_right()
-			
-		if self.collisiondetector() == True:
-			self.is_terminated = True
+		self.stat = 'normal'
+		if self.is_key_pressed(K_s):
+			self.stat = 'proof'	
+		try:
+			if self.stat == 'normal':
+				if self.collisiondetector() == True:
+					self.is_terminated = True
+			else:
+				pass
+		except:
+			pass
 		
 		if ((pygame.time.get_ticks())/1000) < 100:
 			for i in range(pygame.time.get_ticks()/1000):
