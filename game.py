@@ -1,24 +1,22 @@
 import pygame
 from pygame.locals import *
 from gamelib import SimpleGame
-from elements import Bullet, Player, DirectionalBullet , StarBullet, RandomDirectionalBullet,Police1,Police2,Police3,Police4,Riot,Captain
+from elements import Player, DirectionalBullet ,Police1,Police2,Police3,Police4,Riot,Captain,RandomDirectionalBullet
 import random
 
 class MainGame(SimpleGame):
 	BLACK = pygame.Color('black')
 	BLUE = pygame.Color('blue')
 	WHITE = pygame.Color('white')
+	RED = pygame.Color('red')
+	SPEED = [0.1,0.5,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,0.1,0.5,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,0.1,0.5,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,10,15,20,45,55,70]
+	STAR_SPEED = [2,2,2,2,2,2,2,2,2,2,2,20]
 	def __init__(self):
 		super(MainGame, self).__init__('Prison Flee', MainGame.BLACK)
-		self.bosstime = 0
+		self.bosstime = 20
 		self.score = 0
 		self.stat = 'normal'
-		self.player = Player(radius=10, \
-						color=MainGame.WHITE, \
-						pos=(self.window_size[0]/2, \
-						self.window_size[1]/2), )
-		self.bullet = Bullet(radius=10, \
-						color=MainGame.BLUE, \
+		self.player = Player(color=MainGame.WHITE, \
 						pos=(self.window_size[0]/2, \
 						self.window_size[1]/2), )
 		
@@ -27,35 +25,7 @@ class MainGame(SimpleGame):
 			directionalbullettop = DirectionalBullet(radius=4, \
 						color=MainGame.BLUE, \
 						pos=(random.randint(-60,700), \
-						-10), speed = (1,1),dir =random.randint(0,180))
-			self.directionalbullettops.append(directionalbullettop)
-		self.directionalbulletdowns =[]
-		for i in range(1000):
-			directionalbulletdown = DirectionalBullet(radius=4, \
-						color=MainGame.BLUE, \
-						pos=(random.randint(-60,700), \
-						490), speed = (1,1),dir =random.randint(180,360))
-			self.directionalbulletdowns.append(directionalbulletdown)
-			
-		self.bullets = Bullet(radius=10, \
-						color=MainGame.BLUE, \
-						pos=(self.window_size[0]/2, \
-						self.window_size[1]/2), )
-
-		self.directionalbullettops =[]
-		for i in range(1000):
-			directionalbullettop = DirectionalBullet(radius=4, \
-						color=MainGame.BLUE, \
-						pos=(random.randint(-60,700), \
-						-10), speed = (2,2),dir =random.randint(0,150))
-			self.directionalbullettops.append(directionalbullettop)
-
-		self.directionalbullettops =[]
-		for i in range(1000):
-			directionalbullettop = DirectionalBullet(radius=4, \
-						color=MainGame.BLUE, \
-						pos=(random.randint(-60,700), \
-						-10), speed = (2,2),dir =random.randint(0,150))
+						-10), speed = (random.choice(MainGame.SPEED),random.choice(MainGame.SPEED)),dir =random.randint(0,180))
 			self.directionalbullettops.append(directionalbullettop)
 
 		self.directionalbulletdowns =[]
@@ -63,13 +33,8 @@ class MainGame(SimpleGame):
 			directionalbulletdown = DirectionalBullet(radius=4, \
 						color=MainGame.BLUE, \
 						pos=(random.randint(-60,700), \
-						520), speed = (2,2),dir =random.randint(150,360))
+						490), speed = (random.choice(MainGame.SPEED),random.choice(MainGame.SPEED)),dir =random.randint(180,360))
 			self.directionalbulletdowns.append(directionalbulletdown)
-			
-		self.bullets = Bullet(radius=10, \
-						color=MainGame.BLUE, \
-						pos=(self.window_size[0]/2, \
-						self.window_size[1]/2), )
 
 		self.police1lst = []
 		for i in range(100):
@@ -128,41 +93,32 @@ class MainGame(SimpleGame):
 				starbullet = DirectionalBullet(radius=4, \
 						color=MainGame.WHITE, \
 						pos=(self.captain.x, \
-						self.captain.y), speed = (2,2),dir =i*30)
+						self.captain.y), speed = (random.choice(MainGame.STAR_SPEED),random.choice(MainGame.STAR_SPEED)),dir =i*30)
 				self.starbulletlst.append(starbullet)
-
-		if (pygame.time.get_ticks())/1000 %5==4 :
-			for i in range(12):
-				self.starbulletlst[i].remove()
-
-
-		if (pygame.time.get_ticks())/1000 %3==0 :
-			self.randomdirectionalbullet = RandomDirectionalBullet(radius=10, \
-						color=MainGame.BLUE, \
-						pos=(self.window_size[0]/2, \
-						self.window_size[1]/2), speed = (1,1),dir = 200)
-		
 		
 	def init(self):
 		super(MainGame, self).init()
 		self.render_score()
 		
 	def render(self,surface):
-		self.bullet.render(surface)
 		if self.stat == 'proof':
 			self.player.bulletproofrender(surface)
 		else :
 			self.player.render(surface)
+		self.player.edgecontrol()
 
 		self.score = (pygame.time.get_ticks())
 		self.render_score()
 		surface.blit(self.score_image, (10,10))
+		if 5>=(pygame.time.get_ticks())/1000 %30>=0 and  (pygame.time.get_ticks())/1000  >= 30 :
+			surface.blit(self.warn_image, (195,230))
+
 		if (pygame.time.get_ticks())/1000 %5==0 and (pygame.time.get_ticks())/1000  > self.bosstime :
 			for i in range(12):
 				starbullet = DirectionalBullet(radius=4, \
 						color=MainGame.WHITE, \
 						pos=(self.captain.x, \
-						self.captain.y), speed = (2,2),dir =i*30)
+						self.captain.y), speed = (random.choice(MainGame.STAR_SPEED),random.choice(MainGame.STAR_SPEED)),dir =i*30)
 				self.starbulletlst.append(starbullet)
 
 		if (pygame.time.get_ticks())/1000 %5==4 and (pygame.time.get_ticks())/1000  > self.bosstime :
@@ -189,6 +145,7 @@ class MainGame(SimpleGame):
 
 	def render_score(self):
 		self.score_image = self.font.render("Score = %d" % self.score,0,MainGame.WHITE)
+		self.warn_image = self.font.render('Press \'s\' To Use Armour',0,MainGame.RED)
 	
 	def collisiondetector(self,):
 		CHAR_SIZE = 15
@@ -237,8 +194,9 @@ class MainGame(SimpleGame):
 		if self.is_key_pressed(K_RIGHT):
 			self.player.move_right()
 		self.stat = 'normal'
-		if self.is_key_pressed(K_s):
-			self.stat = 'proof'	
+		if 5>=(pygame.time.get_ticks())/1000 %30>=0 and  (pygame.time.get_ticks())/1000  >= 30 :
+			if self.is_key_pressed(K_s):
+				self.stat = 'proof'	
 		try:
 			if self.stat == 'normal':
 				if self.collisiondetector() == True:

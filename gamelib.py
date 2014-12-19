@@ -33,6 +33,7 @@ class SimpleGame(object):
 		self.is_terminated = True
 	def collisiondetector(self):
 		pass
+
 	def init(self):
 		self.game_init()
 		
@@ -40,7 +41,16 @@ class SimpleGame(object):
 		keys_pressed = pygame.key.get_pressed()
 		if key < 0 or key >= len(keys_pressed):
 			return False
-		return (keys_pressed[key])
+		return keys_pressed[key]
+
+	def is_key_down(self, key):
+		keys_pressed = pygame.key.get_pressed()
+		if key < 0 or key >= len(keys_pressed):
+			return False
+		if keys_pressed[key] == True:
+			return True
+		else: 
+			return True
 	
 	def render(self, surface):
 		pass
@@ -56,7 +66,10 @@ class SimpleGame(object):
 			self.render(self.surface)
 			pygame.display.update()
 			self.clock.tick(self.fps)
-			
+		print 'Game Over!!!'
+		print 'Play Again python game.py'
+		print 'Your score is %d' % self.score
+
 	def on_key_up(self, key):
 		pass
 

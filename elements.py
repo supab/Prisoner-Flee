@@ -4,9 +4,8 @@ import random
 import math
 
 class Player(object):
-	def __init__(self, radius, color, pos):
+	def __init__(self, color, pos):
 		(self.x, self.y) = pos
-		self.radius = radius
 		self.color = color
 		self.stat = 'front'
 		self.frontimg = pygame.image.load("prisoner_front.png")
@@ -18,6 +17,16 @@ class Player(object):
 		global score, game_over
 		self.x += self.vx*delta_t
 		self.y += self.vy*delta_t
+
+	def edgecontrol(self):
+		if self.x < 15: 
+			self.x = 15
+		elif self.x > 625:
+			self.x = 625
+		elif self.y < 15: 
+			self.y = 15
+		elif self.y > 465:
+			self.y = 465
 		
 	def move_up(self):
 		self.y -= 5
@@ -37,7 +46,6 @@ class Player(object):
 
 	def render(self, surface):
 		pos = (int(self.x),int(self.y))
-		pygame.draw.circle(surface, self.color, pos, self.radius, 0)
 		if self.stat == 'front':
 			surface.blit(self.frontimg,(self.x-15,self.y-15))
 		if self.stat == 'back':
@@ -48,27 +56,9 @@ class Player(object):
 			surface.blit(self.rightimg,(self.x-15,self.y-15))
 	def bulletproofrender(self, surface):
 		pos = (int(self.x),int(self.y))
-		pygame.draw.circle(surface, self.color, pos, self.radius, 0)
 		surface.blit(self.bulletproof,(self.x-15,self.y-15))
 
 #########################################
-
-class Bullet(object):
-
-	def __init__(self, radius, color, pos):
-		self.radius = radius
-		(self.x,self.y) = pos
-		self.color = color
-		
-	def move(self):
-		self.x += 5
-		
-	def render(self, surface):
-		pos = (int(self.x),int(self.y))
-		pygame.draw.circle(surface, self.color, pos, self.radius, 0)
-		
-#########################################
-
 class DirectionalBullet(object):
 	def __init__(self, radius, color, pos,speed,dir):
 		self.radius = radius
@@ -86,13 +76,6 @@ class DirectionalBullet(object):
 		pygame.draw.circle(surface, self.color, pos, self.radius, 0)
 		
 #########################################
-
-class StarBullet(object):
-	# b = [bullet() for x in range(50)]
-	pass
-	
-#########################################
-						
 class Police1(object):
 	def __init__(self, radius, color, pos,speed):
 		self.radius = radius
@@ -179,9 +162,10 @@ class Captain(Police1):
 #########################################	
 
 class RandomDirectionalBullet(DirectionalBullet):
+	SPEED = [1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,10,20,30]
 	def move(self):
-		self.x += self.vx*float(math.cos(math.radians(self.dir)))+(random.random()-0.5)*15
-		self.y += self.vy* float(math.sin(math.radians(self.dir)))+(random.random()-0.5)*15
+		self.x += self.vx*float(math.cos(math.radians(self.dir)))+(random.random()-0.5)*15*random.choice(RandomDirectionalBullet.SPEED)
+		self.y += self.vy* float(math.sin(math.radians(self.dir)))+(random.random()-0.5)*15*random.choice(RandomDirectionalBullet.SPEED)
 	def updateTrack(self):
 			  trackX += self.vx*float(math.cos(math.radians(self.dir)))
 			  trackY -= self.vx* float(math.sin(math.radians(self.dir)))
